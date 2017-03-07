@@ -77,6 +77,18 @@
     configuration.mediaPlaybackRequiresUserAction = [settings cordovaBoolSettingForKey:@"MediaPlaybackRequiresUserAction" defaultValue:YES];
     configuration.suppressesIncrementalRendering = [settings cordovaBoolSettingForKey:@"SuppressesIncrementalRendering" defaultValue:NO];
     configuration.mediaPlaybackAllowsAirPlay = [settings cordovaBoolSettingForKey:@"MediaPlaybackAllowsAirPlay" defaultValue:YES];
+
+    // allow access to file api
+    @try {
+      [configuration.preferences setValue:@TRUE forKey:@"allowFileAccessFromFileURLs"];
+    }
+    @catch (NSException *exception) {}
+
+    @try {
+      [configuration setValue:@TRUE forKey:@"allowUniversalAccessFromFileURLs"];
+    }
+    @catch (NSException *exception) {}
+
     return configuration;
 }
 
@@ -173,16 +185,16 @@ static void * KVOContext = &KVOContext;
 {
     BOOL title_is_nil = (title == nil);
     BOOL location_is_blank = [[location absoluteString] isEqualToString:@"about:blank"];
-    
+
     BOOL reload = (title_is_nil || location_is_blank);
-    
+
 #ifdef DEBUG
     NSLog(@"%@", @"CDVWKWebViewEngine shouldReloadWebView::");
     NSLog(@"CDVWKWebViewEngine shouldReloadWebView title: %@", title);
     NSLog(@"CDVWKWebViewEngine shouldReloadWebView location: %@", [location absoluteString]);
     NSLog(@"CDVWKWebViewEngine shouldReloadWebView reload: %u", reload);
 #endif
-    
+
     return reload;
 }
 
